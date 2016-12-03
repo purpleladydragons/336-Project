@@ -1,95 +1,77 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<style>
+<head>
+  <meta charset="utf-8">
+  <style>
 
-.counties {
-  fill: none;
-}
+  .counties {
+    fill: none;
+  }
 
-.states {
-  fill: none;
-  stroke: #fff;
-  stroke-linejoin: round;
-}
+  .states {
+    fill: none;
+    stroke: #fff;
+    stroke-linejoin: round;
+  }
 
-</style>
-<svg width="960" height="600"></svg>
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-<script src="https://d3js.org/topojson.v2.min.js"></script>
-<script>
+  </style>
+  <svg width="960" height="600"></svg>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+  <script src="https://d3js.org/topojson.v2.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
+<body>
 
-var svg = d3.select("svg"),
-    width = +svg.attr("width"),
-    height = +svg.attr("height");
+  <!-- Single year queries -->
+  <h1>Single Year Queries</h1>
 
-var unemployment = d3.map();
+  <!-- Select year -->
+  <select>
+    <option value="2004">2004</option>
+    <option value="2008">2008</option>
+    <option value="2012">2012</option>
+    <option value="2016">2016</option>
+  </select>
 
-var path = d3.geoPath();
+  <!-- Query by income or leaning -->
 
-var x = d3.scaleLinear()
-    .domain([1, 10])
-    .rangeRound([600, 860]);
+    <!-- Select county filter by leaning-->
+    <select>
+      <option value="all-counties">All Counties</option>
+      <option value="democrat-counties">Democratic Counties</option>
+      <option value="republican-counties">Republic Counties</option>
+    </select>
 
-var color = d3.scaleThreshold()
-    .domain(d3.range(2, 10))
-    .range(d3.schemeBlues[9]);
+    <!-- Select county filter by income-->
+    <input type="number" name="min-income" min="0">
+    <input type="number" name="max-income" min="0">
 
-var g = svg.append("g")
-    .attr("class", "key")
-    .attr("transform", "translate(0,40)");
+  <!-- Year to year trends -->
+  <h1>Year to year trends</h1>
+  <!-- Select start year -->
+  <select>
+    <option value="2004">2004</option>
+    <option value="2008">2008</option>
+    <option value="2012">2012</option>
+    <option value="2016">2016</option>
+  </select>
 
-g.selectAll("rect")
-  .data(color.range().map(function(d) {
-      d = color.invertExtent(d);
-      if (d[0] == null) d[0] = x.domain()[0];
-      if (d[1] == null) d[1] = x.domain()[1];
-      return d;
-    }))
-  .enter().append("rect")
-    .attr("height", 8)
-    .attr("x", function(d) { return x(d[0]); })
-    .attr("width", function(d) { return x(d[1]) - x(d[0]); })
-    .attr("fill", function(d) { return color(d[0]); });
+  <!-- Select end year -->
+  <select>
+    <option value="2004">2004</option>
+    <option value="2008">2008</option>
+    <option value="2012">2012</option>
+    <option value="2016">2016</option>
+  </select>
 
-g.append("text")
-    .attr("class", "caption")
-    .attr("x", x.range()[0])
-    .attr("y", -6)
-    .attr("fill", "#000")
-    .attr("text-anchor", "start")
-    .attr("font-weight", "bold")
-    .text("Unemployment rate");
+  <!-- Select attribute to compare -->
+  <select>
+    <option value="poverty">Poverty %</option>
+    <option value="average-income">Average Income</option>
+    <option value="democratic-votes">Democratic Votes</option>
+    <option value="republican-votes">Republican Votes</option>
+    <option value="total-votes">Total Votes</option>
+  </select>
 
-g.call(d3.axisBottom(x)
-    .tickSize(13)
-    .tickFormat(function(x, i) { return i ? x : x + "%"; })
-    .tickValues(color.domain()))
-  .select(".domain")
-    .remove();
-
-d3.queue()
-    .defer(d3.json, "https://d3js.org/us-10m.v1.json")
-    .defer(d3.tsv, "unemployment.tsv", function(d) { unemployment.set(d.id, +d.rate); })
-    .await(ready);
-
-function ready(error, us) {
-  if (error) throw error;
-
-  svg.append("g")
-      .attr("class", "counties")
-    .selectAll("path")
-    .data(topojson.feature(us, us.objects.counties).features)
-    .enter().append("path")
-      .attr("fill", function(d) { return color(d.rate = unemployment.get(d.id)); })
-      .attr("d", path)
-    .append("title")
-      .text(function(d) { return d.rate + "%"; });
-
-  svg.append("path")
-      .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
-      .attr("class", "states")
-      .attr("d", path);
-}
-
-</script>
+  <script src="static/js/map.js"></script>
+</body>

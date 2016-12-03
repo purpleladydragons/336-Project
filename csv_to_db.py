@@ -17,7 +17,7 @@ with open(file_name, 'rb') as f:
 col_names = ','.join([col[:col.index(',')] for col in cols])
 
 try:
-    cur.execute("CREATE TABLE t2004 ("+ col_names + ");")
+    cur.execute("CREATE TABLE t2008 ("+ col_names + ");")
 except sqlite3.OperationalError:
     pass
 
