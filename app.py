@@ -22,6 +22,7 @@ def close_connection(exception):
         db.close()
 
 def execute_query(query, args=()):
+    print query, args
     cur = get_db().execute(query, args)
     rows = cur.fetchall()
     cur.close()
@@ -29,16 +30,51 @@ def execute_query(query, args=()):
 
 @app.route('/')
 def index():
-    get_db()
     return app.send_static_file('index.html')
 
 @app.route('/data/singleyear')
 def single_year():
-    return ""
-    
+    cur = get_db().cursor()
+    year = int(request.args.get("year"))
+    county_filter = request.args.get("counties")
+    # TODO income filter
+
+    result = execute_query(
+        """SELECT fips, ?
+            FROM  
+        
+        """
+    )
+
+    str_rows = [','.join(map(str, row)) for row in result]
+    cur.close()
+    header = 'fips,difference\n'
+    return header + '\n'.join(str_rows)
+
 @app.route('/data/y2y')
 def year_to_year():
-    return ""
+    cur = get_db().cursor()
+
+    start_year = request.args.get("startYear")
+    end_year = request.args.get("endYear")
+    attr = request.args.get("attr")
+
+    end_attr = end_year + "." + attr
+    start_attr = start_year + "." + attr 
+    start_fips = start_year + ".FIPS" 
+    end_fips = end_year + ".FIPS" 
+
+    result = execute_query(
+        """SELECT DISTINCT t{}, t{} - t{} as difference 
+            FROM t{} join t{} on t{} = t{};
+        """.format(start_fips, end_attr, start_attr, 
+                start_year, end_year, start_fips, end_fips) 
+    )
+
+    str_rows = [','.join(map(str, row)) for row in result]
+    cur.close()
+    header = 'fips,difference\n'
+    return header + '\n'.join(str_rows)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

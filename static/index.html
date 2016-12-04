@@ -14,7 +14,7 @@
   }
 
   </style>
-  <svg width="960" height="600"></svg>
+  <link rel="stylesheet" type="text/css" href="static/css/style.css">
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
   <script src="https://d3js.org/topojson.v2.min.js"></script>
@@ -22,56 +22,69 @@
 </head>
 <body>
 
-  <!-- Single year queries -->
-  <h1>Single Year Queries</h1>
+  <div class="input"> 
+    <!-- Single year queries -->
+    <h1>Single Year Queries</h1>
 
-  <!-- Select year -->
-  <select>
-    <option value="2004">2004</option>
-    <option value="2008">2008</option>
-    <option value="2012">2012</option>
-    <option value="2016">2016</option>
-  </select>
+    <div class="form-type">
+      <!-- Select year -->
+      <select>
+        <option value="2004">2004</option>
+        <option value="2008">2008</option>
+        <option value="2012">2012</option>
+        <option value="2016">2016</option>
+      </select>
 
-  <!-- Query by income or leaning -->
+      <!-- Query by income or leaning -->
 
-    <!-- Select county filter by leaning-->
-    <select>
-      <option value="all-counties">All Counties</option>
-      <option value="democrat-counties">Democratic Counties</option>
-      <option value="republican-counties">Republic Counties</option>
-    </select>
+        <!-- Select county filter by leaning-->
+        <select>
+          <option value="all-counties">All Counties</option>
+          <option value="democrat-counties">Democratic Counties</option>
+          <option value="republican-counties">Republic Counties</option>
+        </select>
 
-    <!-- Select county filter by income-->
-    <input type="number" name="min-income" min="0">
-    <input type="number" name="max-income" min="0">
+        <!-- Select county filter by income-->
+        <input type="number" name="min-income" min="0">
+        <input type="number" name="max-income" min="0">
 
-  <!-- Year to year trends -->
-  <h1>Year to year trends</h1>
-  <!-- Select start year -->
-  <select>
-    <option value="2004">2004</option>
-    <option value="2008">2008</option>
-    <option value="2012">2012</option>
-    <option value="2016">2016</option>
-  </select>
+        <button type="button" onclick="querySingleYear()">Submit</button>
+    </div>
 
-  <!-- Select end year -->
-  <select>
-    <option value="2004">2004</option>
-    <option value="2008">2008</option>
-    <option value="2012">2012</option>
-    <option value="2016">2016</option>
-  </select>
+    <!-- Year to year trends -->
+    <h1>Year to year trends</h1>
 
-  <!-- Select attribute to compare -->
-  <select>
-    <option value="poverty">Poverty %</option>
-    <option value="average-income">Average Income</option>
-    <option value="democratic-votes">Democratic Votes</option>
-    <option value="republican-votes">Republican Votes</option>
-    <option value="total-votes">Total Votes</option>
-  </select>
+      <!-- Select start year -->
+      <select name="start_year_select">
+        <option value="2004">2004</option>
+        <option value="2008">2008</option>
+        <option value="2012">2012</option>
+        <option value="2016">2016</option>
+      </select>
 
+      <!-- Select end year -->
+      <select name="end_year_select">
+        <option value="2004">2004</option>
+        <option value="2008">2008</option>
+        <option value="2012">2012</option>
+        <option value="2016">2016</option>
+      </select>
+
+      <!-- Select attribute to compare -->
+      <select name="year_to_year_attr_select">
+        <option value="poverty">Poverty %</option>
+        <option value="average-income">Average Income</option>
+        <option value="VOTE_DEM">Democratic Votes</option>
+        <option value="VOTE_REP">Republican Votes</option>
+        <option value="TOTAL_VOTE">Total Votes</option>
+      </select>
+
+      <button type="button" onclick="queryYearToYear()">Submit</button>
+  </div>
+
+  <svg width="960" height="600"></svg>
+
+  <table id="tableView">
+  </table>
   <script src="static/js/map.js"></script>
 </body>

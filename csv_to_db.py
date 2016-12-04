@@ -2,9 +2,10 @@ import sys
 import csv
 import sqlite3
 
-assert len(sys.argv) == 2
+assert len(sys.argv) == 3
 
-file_name = sys.argv[1]
+table = sys.argv[1]
+file_name = sys.argv[2]
 
 conn = sqlite3.connect("/Users/austin/code/prininfo/project/db.sqlite")
 cur = conn.cursor()
@@ -13,11 +14,10 @@ with open(file_name, 'rb') as f:
     reader = csv.reader(f)
     cols = next(reader)
 
-
 col_names = ','.join([col[:col.index(',')] for col in cols])
 
 try:
-    cur.execute("CREATE TABLE t2008 ("+ col_names + ");")
+    cur.execute("CREATE TABLE " + table + " ("+ col_names + ");")
 except sqlite3.OperationalError:
     pass
 
@@ -32,6 +32,6 @@ for row in to_db:
     print row
 
 qs = []
-cur.executemany("INSERT INTO t2004 (" + col_names + ") VALUES (" + "?, "*(len(cols)-1) + "?);", to_db)
+cur.executemany("INSERT INTO " + table + " (" + col_names + ") VALUES (" + "?, "*(len(cols)-1) + "?);", to_db)
 conn.commit()
 conn.close()
