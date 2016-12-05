@@ -64,7 +64,7 @@ def year_to_year():
     result = execute_query("""SELECT DISTINCT t1.FIPS, t1.COUNTY, t1.STATE, t2.{} - t1.{} as difference
         FROM (v{} JOIN f{} on v{}.FIPS = f{}.FIPS) as t1
             JOIN 
-                (v{} JOIN f{} on v{}.FIPS = f{}.FIPS) as t2 on t1.FIPS = t2.FIPS; 
+                (v{} JOIN f{} on v{}.FIPS = f{}.FIPS) as t2 on t1.FIPS = t2.FIPS order by difference desc; 
     """.format(attr, attr, 
                 start_year, start_year, start_year, start_year,
                 end_year, end_year, end_year, end_year)
