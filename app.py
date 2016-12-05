@@ -61,20 +61,6 @@ def year_to_year():
     end_year = request.args.get("endYear")
     attr = request.args.get("attr")
 
-    end_attr = end_year + "." + attr
-    start_attr = start_year + "." + attr 
-
-    start_fips = start_year + ".FIPS" 
-    end_fips = end_year + ".FIPS" 
-
-    start_county = start_year + ".COUNTY"
-    start_state = start_year + ".STATE"
-
-    """SELECT DISTINCT t1.FIPS, t1.COUNTY, t1.STATE, t1.POVERTY - t2.POVERTY as difference
-        FROM (v2004 JOIN f2004 on v2004.FIPS = f2004.FIPS) as t1
-            JOIN 
-                (v2008 JOIN f2008 on v2008.FIPS = f2008.FIPS) as t2 on t1.FIPS = t2.FIPS;"""
-
     result = execute_query("""SELECT DISTINCT t1.FIPS, t1.COUNTY, t1.STATE, t2.{} - t1.{} as difference
         FROM (v{} JOIN f{} on v{}.FIPS = f{}.FIPS) as t1
             JOIN 

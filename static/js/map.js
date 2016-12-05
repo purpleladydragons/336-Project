@@ -95,7 +95,7 @@ function drawMap(error, us) {
       .rangeRound([600, 860]);
 
   var color = d3.scaleThreshold()
-      .domain(d3.range(minVal, maxVal, (maxVal - minVal)/10 ))
+      .domain(d3.range(minVal, maxVal, (maxVal - minVal)/9 ))
       .range(d3.schemeBlues[9]);
 
   var g = svg.append("g")
@@ -126,7 +126,7 @@ function drawMap(error, us) {
 
   g.call(d3.axisBottom(x)
       .tickSize(13)
-      .tickFormat(function(x, i) { return i ? x : x; })
+      .tickFormat(function(x, i) { return i%2===0 ? Math.round(x) : ""; })
       .tickValues(color.domain()))
     .select(".domain")
       .remove();
@@ -139,7 +139,7 @@ function drawMap(error, us) {
       .attr("fill", function(d) { return color(d.rate = dataMap.get(d.id)); })
       .attr("d", path)
     .append("title")
-      .text(function(d) { return d.rate + "%"; });
+      .text(function(d) { return d.id + ": " + d.rate ; });
 
   svg.append("path")
       .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
